@@ -1,17 +1,11 @@
-// English — reference locale. Every other file in this folder must define
-// exactly these keys; `npm run i18n:check` fails the build otherwise.
-//
-// {name} placeholders are substituted at runtime and must survive translation.
 export default {
   'app.name': 'Soge Chess',
   'app.tagline': 'A chess table in your pocket',
-
   'tab.home': 'Home',
   'tab.play': 'Play',
   'tab.clock': 'Clock',
   'tab.library': 'Library',
   'tab.more': 'More',
-
   'common.save': 'Save',
   'common.cancel': 'Cancel',
   'common.delete': 'Delete',
@@ -47,16 +41,12 @@ export default {
   'common.error': 'Error',
   'common.fen': 'FEN',
   'common.pgn': 'PGN',
-
-  // Units. Abbreviations sit directly after a number ("5min", "30s"), so keep
-  // them as short as the language allows.
   'unit.hourAbbr': 'h',
   'unit.minAbbr': 'min',
   'unit.secAbbr': 's',
   'unit.minutesShort': 'minutes',
   'unit.secondsShort': 'seconds',
   'unit.percent': '{n}%',
-
   'error.unexpected': 'Something went wrong',
   'error.emptyFen': 'Empty FEN',
   'error.pgnUnreadable': 'Could not read the PGN',
@@ -64,7 +54,6 @@ export default {
   'error.shareUnavailable': 'Sharing is not available on this device',
   'error.gameNotFound': 'Game not found',
   'error.noGamesToExport': 'No games to export',
-
   'home.greeting.morning': 'Good morning',
   'home.greeting.day': 'Good afternoon',
   'home.greeting.evening': 'Good evening',
@@ -74,7 +63,6 @@ export default {
   'home.recentGames': 'Recent games',
   'home.noGames': 'No saved games yet. Play or record one to get started.',
   'home.viewAll': 'View all',
-
   'stats.games': 'Games',
   'stats.wins': 'Wins',
   'stats.draws': 'Draws',
@@ -83,7 +71,6 @@ export default {
   'stats.winRate': 'Win rate',
   'stats.streak': 'Streak',
   'stats.moves': 'Total moves',
-
   'play.title': 'Play',
   'play.vsEngine': 'vs Engine',
   'play.vsFriend': 'Pass & Play',
@@ -96,18 +83,36 @@ export default {
   'play.withClock': 'Play with clock',
   'play.startGame': 'Start game',
   'play.thinking': 'Thinking…',
-  'play.vsFriendDesc': 'Take turns on the same phone; the board flips itself.',
+  'play.vsFriendDesc': 'Place the phone between you and play from opposite sides like a real chessboard.',
   'play.otbRecordDesc': 'Record your over-the-board game move by move and save it as PGN with times.',
   'play.analyseDesc': 'Play both sides freely, with the evaluation bar and opening name.',
   'play.fromPositionDesc': 'Set it up in the position editor, then start playing from there.',
   'play.puzzlesDesc': 'Warm up with the built-in tactics puzzles.',
-
+  'studio.title': 'Move Studio',
+  'studio.subtitle': 'Record, analyse and set up — one shared move library',
+  'studio.mode.record': 'OTB record',
+  'studio.mode.analyse': 'Analyse',
+  'studio.mode.setup': 'Setup',
+  'studio.saveTitle': 'Title',
+  'studio.defaultTitle': 'Study session',
+  'studio.update': 'Update',
+  'studio.saveAs': 'Save as new',
+  'studio.continue': 'Continue editing',
+  'studio.unsaved': 'Unsaved',
+  'studio.applySetupWarn': 'Applying this setup clears the current move list. Continue?',
+  'studio.usePosition': 'Use this position',
+  'library.locked': 'Archive locked',
+  'library.unlock': 'Unlock',
+  'library.pin': 'Archive PIN',
+  'library.pinSet': 'PIN is set — archive opens locked',
+  'library.pinClear': 'Remove PIN',
+  'library.pinWrong': 'Wrong PIN',
+  'library.pinHint': 'Optional 4–8 digit PIN for your move archive',
   'level.0': 'Beginner',
   'level.1': 'Easy',
   'level.2': 'Medium',
   'level.3': 'Hard',
   'level.4': 'Master',
-
   'board.yourTurn': 'Your turn',
   'board.check': 'Check!',
   'board.checkmate': 'Checkmate',
@@ -129,14 +134,12 @@ export default {
   'board.noMoves': 'No moves played yet',
   'board.confirmResign': 'Are you sure you want to resign?',
   'board.wonBy': '{winner} won — {reason}',
-
   'piece.k': 'King',
   'piece.q': 'Queen',
   'piece.r': 'Rook',
   'piece.b': 'Bishop',
   'piece.n': 'Knight',
   'piece.p': 'Pawn',
-
   'clock.title': 'Chess Clock',
   'clock.presets': 'Presets',
   'clock.custom': 'Custom',
@@ -180,7 +183,6 @@ export default {
   'clock.name.minutesDelay': '{n} min + {d}s delay',
   'clock.name.fideClassical': 'FIDE Classical 40/90 + 30 | 30',
   'clock.name.hourglass': 'Hourglass {n} min',
-
   'library.title': 'Library',
   'library.games': 'Games',
   'library.positions': 'Positions',
@@ -191,6 +193,7 @@ export default {
   'library.sort.oldest': 'Oldest',
   'library.sort.name': 'By name',
   'library.filter': 'Filter',
+  'library.favorites': 'Favorites',
   'library.import': 'Import PGN',
   'library.export': 'Export',
   'library.exportAll': 'Export all',
@@ -203,7 +206,6 @@ export default {
   'library.importSkipped': '{n} skipped.',
   'library.movesAbbr': 'mv',
   'library.selectedCount': '{n} selected',
-
   'game.event': 'Event',
   'game.site': 'Site',
   'game.date': 'Date',
@@ -219,7 +221,6 @@ export default {
   'game.you': 'You',
   'game.engine': 'Engine ({level})',
   'game.untitled': 'Untitled game',
-
   'editor.title': 'Position Editor',
   'editor.pieces': 'Pieces',
   'editor.sideToMove': 'Side to move',
@@ -237,7 +238,6 @@ export default {
   'editor.currentFen': 'Current FEN',
   'editor.collectionHint': 'e.g. Queen’s Gambit',
   'editor.tagsHint': 'tactics, endgame',
-
   'tools.title': 'Tools',
   'tools.editor': 'Position Editor',
   'tools.editorDesc': 'Place pieces freely, paste a FEN, validate and save the position.',
@@ -249,12 +249,10 @@ export default {
   'tools.pgnTools': 'PGN Tools',
   'tools.settings': 'Settings',
   'tools.about': 'About',
-
   'openings.title': 'Opening Library',
   'openings.search': 'Search opening or ECO code',
   'openings.study': 'Study',
   'openings.halfMoves': '{n} half-moves',
-
   'puzzles.title': 'Puzzles',
   'puzzles.solved': 'Solved!',
   'puzzles.wrong': 'Try again',
@@ -266,14 +264,12 @@ export default {
   'puzzles.dailyLimit': 'Daily free puzzle limit reached',
   'puzzles.mateIn': 'Mate in {n}',
   'puzzles.remainingToday': 'Left today',
-
   'puzzle.theme.queen': 'Queen mate',
   'puzzle.theme.rook': 'Rook mate',
   'puzzle.theme.bishop': 'Bishop mate',
   'puzzle.theme.knight': 'Knight mate',
   'puzzle.theme.king': 'King-supported mate',
   'puzzle.theme.pawn': 'Pawn mate',
-
   'settings.title': 'Settings',
   'settings.appearance': 'Appearance',
   'settings.uiTheme': 'App theme',
@@ -302,32 +298,26 @@ export default {
   'settings.notation.san': 'Short (Nf3)',
   'settings.notation.figurine': 'Figurine (♘f3)',
   'settings.notation.localized': 'Localised ({sample})',
-
   'language.pickTitle': 'Choose your language',
   'language.pickSubtitle': 'You can change this later in Settings.',
   'language.continue': 'Continue',
   'language.search': 'Search language',
-
   'age.pickTitle': 'How old are you?',
-  'age.pickSubtitle':
-    'This only adjusts ads and privacy. The whole app stays available at every age.',
+  'age.pickSubtitle': 'This only adjusts ads and privacy. The whole app stays available at every age.',
   'age.continue': 'Continue',
-  'age.privacyNote':
-    'Under 13: family-safe, non-personalised ads only. You can change this later in Settings.',
+  'age.privacyNote': 'Under 13: family-safe, non-personalised ads only. You can change this later in Settings.',
   'age.band.under13': 'Under 13',
   'age.band.under13.hint': 'Child-directed ads (G rating)',
   'age.band.teen': '13–17',
   'age.band.teen.hint': 'Age-appropriate ads, no personalisation',
   'age.band.adult': '18 or older',
   'age.band.adult.hint': 'Standard ads with optional personalisation',
-
   'settings.autoFlip': 'Flip board after each move',
-  'settings.autoFlipDesc': 'For pass-and-play and OTB recording — next player’s side faces them.',
+  'settings.autoFlipDesc': 'Only for OTB recording; turns the board toward the player whose turn it is.',
   'settings.ageBand': 'Age group',
   'settings.ageBandUnset': 'Not set',
-
   'premium.title': 'Soge Chess Premium',
-  'premium.subtitle': 'Ad-free, unlimited, everything unlocked',
+  'premium.subtitle': 'Remove all ads from the app',
   'premium.restore': 'Restore purchases',
   'premium.active': 'Premium active',
   'premium.activeUntil': 'Premium — until {date}',
@@ -358,14 +348,11 @@ export default {
   'premium.demoActivate': 'Turn premium on (test)',
   'premium.demoDeactivate': 'Turn premium off (test)',
   'premium.testMode': 'Test mode',
-  'premium.testModeNote':
-    'Store billing is not wired up yet. Any plan you tap unlocks premium instantly; turn it back off here to test the ad-supported flow.',
+  'premium.testModeNote': 'Store billing is not wired up yet. Any plan you tap unlocks premium instantly; turn it back off here to test the ad-supported flow.',
   'premium.testGrantActive': 'Test entitlement active',
   'premium.badgeTest': 'TEST',
-
   'ads.label': 'Ad',
   'ads.removeCta': 'Remove ads',
-
   'result.whiteWins': 'White won',
   'result.blackWins': 'Black won',
   'result.drawn': 'Draw',
@@ -378,7 +365,6 @@ export default {
   'reason.repetition': 'repetition',
   'reason.fiftyMove': 'fifty-move rule',
   'reason.insufficient': 'insufficient material',
-
   'theme.ui.midnight': 'Midnight',
   'theme.ui.slate': 'Charcoal',
   'theme.ui.paper': 'Paper',
@@ -392,26 +378,17 @@ export default {
   'theme.board.purple': 'Amethyst',
   'theme.board.contrast': 'High Contrast',
   'theme.board.coral': 'Coral',
-
   'pieceSet.classic': 'Classic',
   'pieceSet.outline': 'Outline',
   'pieceSet.neo': 'Neo',
   'pieceSet.bold': 'Bold',
-
-  // Shared file names. Keep them short and filesystem-safe: everything except
-  // letters, digits, "-" and "_" is stripped before the file is written.
   'share.file.game': 'game',
   'share.file.games': 'games',
   'share.file.archive': 'soge-archive',
   'share.file.selection': 'soge-selection',
   'share.file.backup': 'soge-chess-backup',
-
-  // --- Opening names -----------------------------------------------------------
-  // Built compositionally: family (`opening.base.*`) + optional descriptor
-  // (`opening.mod.*`). Player and place names (Najdorf, Marshall, Berlin…) live
-  // in the data file because they are identical in every language.
-  'opening.base.kingsPawn': "King's Pawn Game",
-  'opening.base.kingsKnight': "King's Knight Opening",
+  'opening.base.kingsPawn': 'King\'s Pawn Game',
+  'opening.base.kingsKnight': 'King\'s Knight Opening',
   'opening.base.philidor': 'Philidor Defence',
   'opening.base.petrov': 'Petrov Defence',
   'opening.base.scotch': 'Scotch Game',
@@ -423,10 +400,10 @@ export default {
   'opening.base.twoKnights': 'Two Knights Defence',
   'opening.base.friedLiver': 'Fried Liver Attack',
   'opening.base.ruyLopez': 'Ruy Lopez',
-  'opening.base.kingsGambit': "King's Gambit",
+  'opening.base.kingsGambit': 'King\'s Gambit',
   'opening.base.centerGame': 'Centre Game',
   'opening.base.danishGambit': 'Danish Gambit',
-  'opening.base.bishopsOpening': "Bishop's Opening",
+  'opening.base.bishopsOpening': 'Bishop\'s Opening',
   'opening.base.vienna': 'Vienna Game',
   'opening.base.nimzowitschDef': 'Nimzowitsch Defence',
   'opening.base.owenDef': 'Owen Defence',
@@ -437,39 +414,38 @@ export default {
   'opening.base.caroKann': 'Caro-Kann Defence',
   'opening.base.sicilian': 'Sicilian Defence',
   'opening.base.french': 'French Defence',
-  'opening.base.queensPawn': "Queen's Pawn Game",
+  'opening.base.queensPawn': 'Queen\'s Pawn Game',
   'opening.base.blackmarDiemer': 'Blackmar-Diemer Gambit',
   'opening.base.richterVeresov': 'Richter-Veresov Attack',
   'opening.base.london': 'London System',
   'opening.base.torre': 'Torre Attack',
   'opening.base.colle': 'Colle System',
-  'opening.base.queensGambit': "Queen's Gambit",
+  'opening.base.queensGambit': 'Queen\'s Gambit',
   'opening.base.albin': 'Albin Countergambit',
   'opening.base.slav': 'Slav Defence',
-  'opening.base.qga': "Queen's Gambit Accepted",
-  'opening.base.qgd': "Queen's Gambit Declined",
+  'opening.base.qga': 'Queen\'s Gambit Accepted',
+  'opening.base.qgd': 'Queen\'s Gambit Declined',
   'opening.base.tarraschDef': 'Tarrasch Defence',
   'opening.base.semiSlav': 'Semi-Slav Defence',
   'opening.base.grunfeld': 'Grünfeld Defence',
   'opening.base.trompowsky': 'Trompowsky Attack',
   'opening.base.catalan': 'Catalan Opening',
   'opening.base.indianGame': 'Indian Game',
-  'opening.base.queensIndian': "Queen's Indian Defence",
+  'opening.base.queensIndian': 'Queen\'s Indian Defence',
   'opening.base.nimzoIndian': 'Nimzo-Indian Defence',
-  'opening.base.kingsIndian': "King's Indian Defence",
+  'opening.base.kingsIndian': 'King\'s Indian Defence',
   'opening.base.benoni': 'Benoni Defence',
   'opening.base.benko': 'Benko Gambit',
   'opening.base.dutch': 'Dutch Defence',
-  'opening.base.anderssen': "Anderssen's Opening",
+  'opening.base.anderssen': 'Anderssen\'s Opening',
   'opening.base.sokolsky': 'Sokolsky Opening',
   'opening.base.grob': 'Grob Attack',
   'opening.base.nimzoLarsen': 'Nimzo-Larsen Attack',
-  'opening.base.bird': "Bird's Opening",
+  'opening.base.bird': 'Bird\'s Opening',
   'opening.base.reti': 'Réti Opening',
-  'opening.base.kingsIndianAttack': "King's Indian Attack",
+  'opening.base.kingsIndianAttack': 'King\'s Indian Attack',
   'opening.base.english': 'English Opening',
   'opening.base.polishDef': 'Polish Defence',
-
   'opening.mod.attack': 'Attack',
   'opening.mod.defense': 'Defence',
   'opening.mod.gambit': 'Gambit',
@@ -493,5 +469,5 @@ export default {
   'opening.mod.symmetrical': 'Symmetrical',
   'opening.mod.reversedSicilian': 'Reversed Sicilian',
   'opening.mod.angloIndian': 'Anglo-Indian',
-  'opening.mod.kingsEnglish': "King's English",
+  'opening.mod.kingsEnglish': 'King\'s English',
 };

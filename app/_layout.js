@@ -61,6 +61,7 @@ function Routes() {
         <Stack.Screen name="game/play" options={{ headerShown: false }} />
         <Stack.Screen name="game/[id]" options={{ headerShown: false }} />
         <Stack.Screen name="clock/run" options={{ headerShown: false, orientation: 'all' }} />
+        <Stack.Screen name="studio" options={{ headerShown: false }} />
         <Stack.Screen name="editor" options={{ headerShown: false }} />
         <Stack.Screen name="openings" options={{ headerShown: false }} />
         <Stack.Screen name="puzzles" options={{ headerShown: false }} />

@@ -101,21 +101,21 @@ export const CLOCK_PRESETS = [
     group: 'delayed',
     nameKey: 'clock.name.minutesDelay',
     nameParams: { n: 90, d: 30 },
-    premium: true,
+    premium: false,
     control: { mode: 'delay', stages: [stage(null, 90 * M, 0)], delay: 30 * S },
   },
   {
     id: 'bronstein-5-3',
     group: 'delayed',
     name: 'Bronstein 5 | 3',
-    premium: true,
+    premium: false,
     control: { mode: 'bronstein', stages: [stage(null, 5 * M, 0)], delay: 3 * S },
   },
   {
     id: 'fide-classical',
     group: 'tournament',
     nameKey: 'clock.name.fideClassical',
-    premium: true,
+    premium: false,
     control: {
       mode: 'fischer',
       stages: [stage(40, 90 * M, 30 * S), stage(null, 30 * M, 30 * S)],
@@ -126,7 +126,7 @@ export const CLOCK_PRESETS = [
     id: 'fide-40-40',
     group: 'tournament',
     name: '40/120, 20/60, +15 | 30',
-    premium: true,
+    premium: false,
     control: {
       mode: 'fischer',
       stages: [stage(40, 120 * M, 0), stage(20, 60 * M, 0), stage(null, 15 * M, 30 * S)],
@@ -138,7 +138,7 @@ export const CLOCK_PRESETS = [
     group: 'fun',
     nameKey: 'clock.name.hourglass',
     nameParams: { n: 3 },
-    premium: true,
+    premium: false,
     control: { mode: 'hourglass', stages: [stage(null, 3 * M, 0)], delay: 0 },
   },
 ];

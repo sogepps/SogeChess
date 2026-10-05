@@ -14,7 +14,6 @@ import {
 } from '../../src/components/ui';
 import AdBanner from '../../src/components/AdBanner';
 import { useSettings } from '../../src/store/SettingsContext';
-import { usePremium } from '../../src/store/PremiumContext';
 import { DIFFICULTY } from '../../src/chess/engine';
 import { CLOCK_PRESETS, presetName } from '../../src/chess/clock';
 import { RADIUS, SPACING } from '../../src/theme/themes';
@@ -66,7 +65,6 @@ function ModeCard({ icon, title, description, tint, onPress, badge }) {
 
 export default function PlayScreen() {
   const { theme, t } = useSettings();
-  const { isPremium } = usePremium();
   const router = useRouter();
 
   const [level, setLevel] = useState(2);
@@ -120,14 +118,12 @@ export default function PlayScreen() {
           </Txt>
           <Row wrap gap={SPACING.sm}>
             {DIFFICULTY.map((d) => {
-              const locked = d.premium && !isPremium;
               return (
                 <Chip
                   key={d.id}
                   label={t(d.labelKey)}
                   active={level === d.id}
-                  locked={locked}
-                  onPress={() => (locked ? router.push('/premium') : setLevel(d.id))}
+                  onPress={() => setLevel(d.id)}
                 />
               );
             })}
@@ -180,32 +176,17 @@ export default function PlayScreen() {
           onPress={() => router.push('/game/play?mode=friend')}
         />
         <ModeCard
-          icon="create"
-          title={t('play.otbRecord')}
-          description={t('play.otbRecordDesc')}
-          tint={theme.accent}
-          onPress={() => router.push('/game/play?mode=record')}
-        />
-        <ModeCard
-          icon="analytics"
-          title={t('play.analyse')}
-          description={t('play.analyseDesc')}
-          tint={theme.primary}
-          onPress={() => router.push('/game/play?mode=analysis')}
-        />
-        <ModeCard
-          icon="construct"
-          title={t('play.fromPosition')}
-          description={t('play.fromPositionDesc')}
-          tint={theme.warning}
-          onPress={() => router.push('/editor')}
+          icon="grid"
+          title={t('studio.title')}
+          description={t('studio.subtitle')}
+          tint="#8B7CF6"
+          onPress={() => router.push('/studio?mode=record')}
         />
         <ModeCard
           icon="extension-puzzle"
           title={t('puzzles.title')}
           description={t('play.puzzlesDesc')}
           tint={theme.danger}
-          badge={isPremium ? null : t('common.premium')}
           onPress={() => router.push('/puzzles')}
         />
       </View>

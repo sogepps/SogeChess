@@ -80,14 +80,14 @@ export const PIECE_SETS = {
   neo: {
     key: 'neo',
     nameKey: 'pieceSet.neo',
-    premium: true,
+    premium: false,
     white: { fill: '#F5EFE3', stroke: '#8A7355', strokeWidth: 3 },
     black: { fill: '#3A3F4B', stroke: '#12151B', strokeWidth: 3 },
   },
   bold: {
     key: 'bold',
     nameKey: 'pieceSet.bold',
-    premium: true,
+    premium: false,
     white: { fill: '#FFFFFF', stroke: '#000000', strokeWidth: 7 },
     black: { fill: '#101010', stroke: '#FFFFFF', strokeWidth: 3 },
   },

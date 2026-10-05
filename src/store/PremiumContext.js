@@ -2,15 +2,6 @@ import React, { createContext, useCallback, useContext, useEffect, useMemo, useS
 import Constants from 'expo-constants';
 import { KEYS, readJson, writeJson } from './db';
 
-// Ücretsiz sürüm sınırları. Rahatsız etmeyecek kadar geniş, ama uzun süre
-// kullanan birinin premium'u değerli bulacağı seviyede.
-export const FREE_LIMITS = {
-  games: 25,
-  positions: 15,
-  clockPresets: 3,
-  dailyPuzzles: 5,
-};
-
 export const PRODUCTS = [
   {
     id: 'soge_premium_monthly',
@@ -39,8 +30,7 @@ export const PRODUCTS = [
 
 // Ödeme katmanı bir adaptörün arkasında duruyor. Şu an takılı olan adaptör
 // TEST adaptörü: mağazaya hiç gitmez, "satın al"a basıldığı anda yetkiyi açar.
-// Böylece premium'a bağlı her şey (reklamsızlık, sınırların kalkması, premium
-// temalar) gerçek bir ödeme kurmadan denenebilir.
+// Böylece reklamsız deneyim gerçek bir ödeme kurmadan denenebilir.
 //
 // Yayına çıkarken yalnızca bu nesneyi gerçek adaptörle (RevenueCat veya
 // expo-in-app-purchases) değiştirmek yeterli; uygulamanın geri kalanı aynı
@@ -136,17 +126,6 @@ export function PremiumProvider({ children }) {
     await writeJson(KEYS.premium, next);
   }, []);
 
-  // Bir sınıra ulaşıldı mı? Premium'da hiçbir zaman ulaşılmaz.
-  const limitFor = useCallback(
-    (key) => (isPremium ? Infinity : FREE_LIMITS[key] ?? Infinity),
-    [isPremium]
-  );
-
-  const isAtLimit = useCallback(
-    (key, currentCount) => currentCount >= limitFor(key),
-    [limitFor]
-  );
-
   const value = useMemo(
     () => ({
       isPremium,
@@ -157,14 +136,12 @@ export function PremiumProvider({ children }) {
       purchase,
       restore,
       setDemoPremium,
-      limitFor,
-      isAtLimit,
       showAds: !isPremium,
       billingAvailable: testBilling.available,
       isExpoGo,
       testMode: TEST_BILLING,
     }),
-    [isPremium, entitlement, loaded, busy, purchase, restore, setDemoPremium, limitFor, isAtLimit]
+    [isPremium, entitlement, loaded, busy, purchase, restore, setDemoPremium]
   );
 
   return <PremiumContext.Provider value={value}>{children}</PremiumContext.Provider>;

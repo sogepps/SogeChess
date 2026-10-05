@@ -8,7 +8,9 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
     "primaryColor": "#F0B429",
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.soge.chess",
@@ -30,7 +32,10 @@
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "permissions": ["com.google.android.gms.permission.AD_ID"]
+      "permissions": [
+        "com.google.android.gms.permission.AD_ID",
+        "com.google.android.gms.permission.AD_ID"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png",
@@ -57,7 +62,9 @@
           "delayAppMeasurementInit": true,
           "optimizeInitialization": true,
           "optimizeAdLoading": true,
-          "skAdNetworkItems": ["cstr6suwn9.skadnetwork"]
+          "skAdNetworkItems": [
+            "cstr6suwn9.skadnetwork"
+          ]
         }
       ],
       [
@@ -80,7 +87,15 @@
     },
     "extra": {
       "router": {},
-      "eas": {}
+      "eas": {
+        "projectId": "65938e3e-bcc8-4f70-9744-27c0fcb48949"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/65938e3e-bcc8-4f70-9744-27c0fcb48949"
     }
   }
 }

@@ -80,9 +80,9 @@ export default function MoreScreen() {
       <Card padded={false} style={{ paddingHorizontal: SPACING.lg, marginBottom: SPACING.lg }}>
         <ListRow
           icon="grid"
-          title={t('tools.editor')}
-          subtitle={t('tools.editorDesc')}
-          onPress={() => router.push('/editor')}
+          title={t('studio.title')}
+          subtitle={t('studio.subtitle')}
+          onPress={() => router.push('/studio?mode=setup')}
         />
         <Divider />
         <ListRow
@@ -96,7 +96,6 @@ export default function MoreScreen() {
           icon="extension-puzzle"
           title={t('tools.puzzles')}
           subtitle={t('tools.puzzlesDesc')}
-          badge={isPremium ? null : t('common.premium')}
           onPress={() => router.push('/puzzles')}
         />
         <Divider />

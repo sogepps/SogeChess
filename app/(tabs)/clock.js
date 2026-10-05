@@ -17,7 +17,6 @@ import {
 } from '../../src/components/ui';
 import AdBanner from '../../src/components/AdBanner';
 import { useSettings } from '../../src/store/SettingsContext';
-import { usePremium } from '../../src/store/PremiumContext';
 import {
   CLOCK_MODES,
   CLOCK_PRESETS,
@@ -32,7 +31,6 @@ import { RADIUS, SPACING } from '../../src/theme/themes';
 
 export default function ClockScreen() {
   const { theme, settings, update, t } = useSettings();
-  const { isPremium, isAtLimit } = usePremium();
   const router = useRouter();
 
   const [custom, setCustom] = useState([]);
@@ -49,10 +47,6 @@ export default function ClockScreen() {
   const groups = useMemo(() => presetGroups(), []);
 
   const launch = (preset) => {
-    if (preset.premium && !isPremium) {
-      router.push('/premium');
-      return;
-    }
     router.push(`/clock/run?preset=${encodeURIComponent(preset.id)}`);
   };
 
@@ -163,25 +157,14 @@ export default function ClockScreen() {
         variant="secondary"
         full
         style={{ marginBottom: SPACING.lg }}
-        onPress={() => {
-          if (isAtLimit('clockPresets', custom.length)) {
-            Alert.alert(t('common.premium'), t('library.limitReached', { n: 3 }), [
-              { text: t('common.cancel'), style: 'cancel' },
-              { text: t('premium.subscribe'), onPress: () => router.push('/premium') },
-            ]);
-            return;
-          }
-          setBuilderOpen(true);
-        }}
+        onPress={() => setBuilderOpen(true)}
       />
 
       {groups.map((group) => (
         <View key={group.group} style={{ marginBottom: SPACING.lg }}>
           <SectionHeader title={t(group.labelKey)} />
           <Row wrap gap={SPACING.sm}>
-            {group.items.map((p) => {
-              const locked = p.premium && !isPremium;
-              return (
+            {group.items.map((p) => (
                 <Pressable
                   key={p.id}
                   onPress={() => launch(p)}
@@ -201,16 +184,12 @@ export default function ClockScreen() {
                     <Txt size={15} weight="800" style={{ flex: 1 }} numberOfLines={1}>
                       {presetName(p, t)}
                     </Txt>
-                    {locked ? (
-                      <Ionicons name="lock-closed" size={13} color={theme.accent} />
-                    ) : null}
                   </Row>
                   <Txt size={11} faint numberOfLines={1}>
                     {t(MODE_LABEL_KEYS[p.control.mode])}
                   </Txt>
                 </Pressable>
-              );
-            })}
+            ))}
           </Row>
         </View>
       ))}
@@ -233,8 +212,6 @@ export default function ClockScreen() {
 
 function ClockBuilder({ visible, onClose, onSave }) {
   const { theme, t } = useSettings();
-  const { isPremium } = usePremium();
-  const router = useRouter();
 
   const [name, setName] = useState('');
   const [mode, setMode] = useState('fischer');
@@ -376,13 +353,9 @@ function ClockBuilder({ visible, onClose, onSave }) {
             icon="add"
             variant="secondary"
             size="sm"
-            onPress={() => {
-              if (!isPremium) {
-                router.push('/premium');
-                return;
-              }
-              setStages((prev) => [...prev, { moves: '', minutes: '30', increment: '30' }]);
-            }}
+            onPress={() =>
+              setStages((prev) => [...prev, { moves: '', minutes: '30', increment: '30' }])
+            }
           />
         </View>
 
@@ -390,8 +363,6 @@ function ClockBuilder({ visible, onClose, onSave }) {
           icon="git-compare"
           label={t('clock.asymmetric')}
           value={asymmetric}
-          locked={!isPremium}
-          onLockedPress={() => router.push('/premium')}
           onValueChange={setAsymmetric}
         />
         {asymmetric ? (

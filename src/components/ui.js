@@ -313,7 +313,17 @@ export function Row({ children, gap = SPACING.md, style, align = 'center', wrap,
   );
 }
 
-export function Field({ label, value, onChangeText, placeholder, multiline, keyboardType, style }) {
+export function Field({
+  label,
+  value,
+  onChangeText,
+  placeholder,
+  multiline,
+  keyboardType,
+  secureTextEntry,
+  maxLength,
+  style,
+}) {
   const { theme, isRTL } = useSettings();
   return (
     <View style={[{ gap: 6 }, style]}>
@@ -329,6 +339,8 @@ export function Field({ label, value, onChangeText, placeholder, multiline, keyb
         placeholderTextColor={theme.textFaint}
         multiline={multiline}
         keyboardType={keyboardType}
+        secureTextEntry={secureTextEntry}
+        maxLength={maxLength}
         style={{
           backgroundColor: theme.surfaceAlt,
           borderWidth: 1,

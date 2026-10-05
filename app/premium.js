@@ -11,12 +11,6 @@ import { RADIUS, SPACING } from '../src/theme/themes';
 
 const PERKS = [
   { icon: 'ban', key: 'noAds' },
-  { icon: 'infinite', key: 'unlimited' },
-  { icon: 'color-palette', key: 'themes' },
-  { icon: 'timer', key: 'clock' },
-  { icon: 'hardware-chip', key: 'engine' },
-  { icon: 'extension-puzzle', key: 'puzzles' },
-  { icon: 'share', key: 'export' },
 ];
 
 export default function PremiumScreen() {

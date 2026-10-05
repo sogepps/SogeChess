@@ -75,7 +75,7 @@ export const UI_THEMES = {
   },
 };
 
-// Tahta temaları. premium:true olanlar kilitli.
+// Bütün tahta temaları ücretsiz ve herkese açıktır.
 export const BOARD_THEMES = {
   classic: {
     key: 'classic',
@@ -110,35 +110,35 @@ export const BOARD_THEMES = {
     nameKey: 'theme.board.walnut',
     light: '#E8CFA9',
     dark: '#8B5E3C',
-    premium: true,
+    premium: false,
   },
   marble: {
     key: 'marble',
     nameKey: 'theme.board.marble',
     light: '#F2F2F0',
     dark: '#9A9B97',
-    premium: true,
+    premium: false,
   },
   purple: {
     key: 'purple',
     nameKey: 'theme.board.purple',
     light: '#E5DDF5',
     dark: '#8267AE',
-    premium: true,
+    premium: false,
   },
   contrast: {
     key: 'contrast',
     nameKey: 'theme.board.contrast',
     light: '#FFFFFF',
     dark: '#3A3A3A',
-    premium: true,
+    premium: false,
   },
   coral: {
     key: 'coral',
     nameKey: 'theme.board.coral',
     light: '#FCE3D6',
     dark: '#C9695A',
-    premium: true,
+    premium: false,
   },
 };
 

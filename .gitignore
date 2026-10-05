@@ -43,3 +43,7 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# export test output
+.export-home-check/
+.expo-export-check/

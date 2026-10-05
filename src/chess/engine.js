@@ -21,7 +21,7 @@ export const DIFFICULTY = [
   { id: 1, labelKey: 'level.1', engineLevel: 1, elo: '~900', premium: false },
   { id: 2, labelKey: 'level.2', engineLevel: 2, elo: '~1200', premium: false },
   { id: 3, labelKey: 'level.3', engineLevel: 3, elo: '~1500', premium: false },
-  { id: 4, labelKey: 'level.4', engineLevel: 4, elo: '~1800', premium: true },
+  { id: 4, labelKey: 'level.4', engineLevel: 4, elo: '~1800', premium: false },
 ];
 
 // Seviye 0 motoru kullanmaz: acemi hissi vermek için çoğunlukla rastgele,

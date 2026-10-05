@@ -27,6 +27,7 @@ export const KEYS = {
   game: (id) => `${P}game:${id}`,
   position: (id) => `${P}position:${id}`,
   session: (name) => `${P}session:${name}`,
+  libraryPin: P + 'libraryPin',
 };
 
 export function uid(prefix = 'id') {
@@ -77,6 +78,7 @@ function toGameMeta(game) {
     timeControl: game.headers?.TimeControl || '',
     opening: game.opening || null,
     moveCount: Array.isArray(game.moves) ? game.moves.length : 0,
+    finalFen: game.finalFen || game.startFen || null,
     tags: game.tags || [],
     source: game.source || 'manual',
     favorite: !!game.favorite,

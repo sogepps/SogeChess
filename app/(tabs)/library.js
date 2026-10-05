@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Alert, FlatList, Pressable, TextInput, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -11,6 +11,7 @@ import {
   Card,
   Chip,
   EmptyState,
+  Field,
   IconButton,
   Row,
   Sheet,
@@ -20,7 +21,7 @@ import MiniBoard from '../../src/components/MiniBoard';
 import AdBanner from '../../src/components/AdBanner';
 import { useSettings } from '../../src/store/SettingsContext';
 import { useLibrary } from '../../src/store/LibraryContext';
-import { usePremium } from '../../src/store/PremiumContext';
+import { KEYS, readJson } from '../../src/store/db';
 import { gameTitle, parsePgnFile } from '../../src/chess/pgn';
 import { openingName } from '../../src/chess/openings';
 import { exportGamesToFile } from '../../src/services/share';
@@ -38,7 +39,6 @@ export default function LibraryScreen() {
   const { theme, t } = useSettings();
   const { games, positions, removeGame, removePosition, importGames, toggleGameFavorite } =
     useLibrary();
-  const { isPremium } = usePremium();
   const router = useRouter();
   // Listenin son satırı sekme çubuğunun ve sistem gezinme çubuğunun altında kalmasın.
   const listBottomPad = useTabContentPadding(SPACING.lg);
@@ -49,6 +49,31 @@ export default function LibraryScreen() {
   const [favOnly, setFavOnly] = useState(false);
   const [importing, setImporting] = useState(false);
   const [selection, setSelection] = useState([]);
+  const [pin, setPin] = useState(null);
+  const [unlocked, setUnlocked] = useState(false);
+  const [pinInput, setPinInput] = useState('');
+
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      const stored = await readJson(KEYS.libraryPin, null);
+      if (!alive) return;
+      setPin(stored);
+      setUnlocked(!stored);
+    })();
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+  const tryUnlock = () => {
+    if (pinInput === String(pin)) {
+      setUnlocked(true);
+      setPinInput('');
+    } else {
+      Alert.alert(t('library.title'), t('library.pinWrong'));
+    }
+  };
 
   const filteredGames = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -110,16 +135,12 @@ export default function LibraryScreen() {
   }, [importGames, t]);
 
   const doExportAll = useCallback(async () => {
-    if (!isPremium) {
-      router.push('/premium');
-      return;
-    }
     try {
       await exportGamesToFile(games.map((g) => g.id), t, 'share.file.archive');
     } catch (err) {
       Alert.alert(t('library.export'), errorMessage(err, t));
     }
-  }, [isPremium, games, router, t]);
+  }, [games, t]);
 
   const toggleSelect = (id) =>
     setSelection((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
@@ -134,11 +155,15 @@ export default function LibraryScreen() {
           borderColor: isSelected ? theme.primary : theme.border,
           marginBottom: SPACING.sm,
         }}
-        onPress={() => (selecting ? toggleSelect(item.id) : router.push(`/game/${item.id}`))}
+        onPress={() =>
+          selecting
+            ? toggleSelect(item.id)
+            : router.push(`/studio?id=${encodeURIComponent(item.id)}&mode=analyse`)
+        }
       >
         <Pressable onLongPress={() => toggleSelect(item.id)} delayLongPress={280}>
           <Row style={{ padding: SPACING.md }} gap={SPACING.md}>
-            <MiniBoard fen={item.finalFen} size={54} />
+            <MiniBoard fen={item.finalFen || item.startFen} size={54} />
             <View style={{ flex: 1, gap: 3 }}>
               <Txt size={15} weight="700" numberOfLines={1}>
                 {gameTitle(item, t('game.untitled'))}
@@ -189,7 +214,11 @@ export default function LibraryScreen() {
     <Card
       padded={false}
       style={{ flex: 1, margin: SPACING.xs }}
-      onPress={() => router.push(`/editor?fen=${encodeURIComponent(item.fen)}&id=${item.id}`)}
+      onPress={() =>
+        router.push(
+          `/studio?mode=setup&fen=${encodeURIComponent(item.fen)}`
+        )
+      }
     >
       <View style={{ padding: SPACING.sm, gap: SPACING.sm, alignItems: 'center' }}>
         <MiniBoard fen={item.fen} size={110} radius={8} />
@@ -221,6 +250,36 @@ export default function LibraryScreen() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: theme.bg }} edges={['top']}>
+      {!unlocked ? (
+        <View
+          style={{
+            flex: 1,
+            padding: SPACING.xl,
+            justifyContent: 'center',
+            gap: SPACING.lg,
+          }}
+        >
+          <View style={{ alignItems: 'center', gap: SPACING.sm }}>
+            <Ionicons name="lock-closed" size={36} color={theme.accent} />
+            <Txt size={20} weight="800">
+              {t('library.locked')}
+            </Txt>
+            <Txt size={13} faint style={{ textAlign: 'center' }}>
+              {t('library.pinHint')}
+            </Txt>
+          </View>
+          <Field
+            label={t('library.pin')}
+            value={pinInput}
+            onChangeText={setPinInput}
+            keyboardType="number-pad"
+            secureTextEntry
+            maxLength={8}
+          />
+          <Button title={t('library.unlock')} icon="lock-open" variant="accent" full onPress={tryUnlock} />
+        </View>
+      ) : (
+        <>
       <View style={{ paddingHorizontal: SPACING.lg, paddingBottom: SPACING.sm }}>
         <Row style={{ marginBottom: SPACING.md }}>
           <Txt size={26} weight="800" style={{ flex: 1 }}>
@@ -228,6 +287,7 @@ export default function LibraryScreen() {
           </Txt>
           <IconButton name="download-outline" onPress={doImport} disabled={importing} />
           <IconButton name="share-outline" onPress={doExportAll} />
+          <IconButton name="add" onPress={() => router.push('/studio?mode=record')} />
         </Row>
 
         <Row gap={SPACING.sm} style={{ marginBottom: SPACING.md }}>
@@ -273,7 +333,7 @@ export default function LibraryScreen() {
 
         <Row gap={SPACING.sm} wrap>
           <Chip
-            label={t('common.premium')}
+            label={t('library.favorites')}
             icon="star"
             active={favOnly}
             onPress={() => setFavOnly((f) => !f)}
@@ -358,11 +418,13 @@ export default function LibraryScreen() {
               icon="bookmark-outline"
               title={t('library.noPositions')}
               action={t('editor.title')}
-              onAction={() => router.push('/editor')}
+              onAction={() => router.push('/studio?mode=setup')}
             />
           }
           ListFooterComponent={<AdBanner placement="library" style={{ margin: SPACING.sm }} />}
         />
+      )}
+        </>
       )}
     </SafeAreaView>
   );

@@ -111,9 +111,14 @@ function Board({
   const sq = size / 8;
   const [pieces, setPieces] = useState(() => piecesFromFen(fen).map((p) => ({ ...p, id: nextId() })));
   const [drag, setDrag] = useState(null);
+  const dragRef = useRef(null);
 
   useEffect(() => {
     setPieces((prev) => reconcilePieces(prev, fen));
+    // Bir hamle tamamlandığında jestin onFinalize olayı cihaz tarafından
+    // kaçırılsa bile geçici sürükleme katmanı tahtada hayalet taş bırakmasın.
+    dragRef.current = null;
+    setDrag(null);
   }, [fen]);
 
   const targetSet = useMemo(() => new Set(legalTargets), [legalTargets]);
@@ -131,10 +136,8 @@ function Board({
 
   const dragX = useSharedValue(0);
   const dragY = useSharedValue(0);
-  // Sürükleme durumu ayrıca ref'te tutulur: jest hem onEnd hem onFinalize'ı
-  // tetikler ve state güncellemesi asenkron olduğu için ref olmadan aynı hamle
-  // iki kez işlenebilir.
-  const dragRef = useRef(null);
+  // Sürükleme durumu ayrıca ref'te tutulur: jest state güncellemesi asenkron
+  // olsa da hamle yalnızca bir kez işlenir.
 
   const beginDrag = useCallback(
     (px, py) => {
@@ -142,11 +145,15 @@ function Board({
       const square = squareAt(px, py);
       if (!square) return;
       const piece = pieces.find((p) => p.square === square);
-      dragRef.current = { from: square, piece: piece || null };
+      // Seçili taşın yasal hedefindeki rakip taşı ayrı bir sürükleme katmanı
+      // olarak çizmek, dokunarak yemede hayalet taş bırakabiliyordu.
+      const draggablePiece = targetSet.has(square) ? null : piece || null;
+      dragRef.current = { from: square, piece: draggablePiece };
       setDrag(dragRef.current);
-      onSquarePress?.(square);
+      // Dokunma geri bildirimini burada vermiyoruz: parent/FEN'i jest bitmeden
+      // güncellemek, sürükleme katmanının hayalet taş olarak kalmasına yol açıyordu.
     },
-    [interactive, squareAt, pieces, onSquarePress]
+    [interactive, squareAt, pieces, targetSet]
   );
 
   const endDrag = useCallback(
@@ -156,14 +163,16 @@ function Board({
       setDrag(null);
       if (!interactive || !current) return;
 
-      // Parmak neredeyse hiç hareket etmediyse bu bir dokunuştur; kare seçimi
-      // zaten beginDrag'de bildirildi, tekrar bildirmeye gerek yok.
-      if (travelled <= sq * 0.4) return;
+      // Önce sürükleme katmanı temizlenir, sonra dokunma/hamle işlenir.
+      if (travelled <= sq * 0.4) {
+        onSquarePress?.(current.from);
+        return;
+      }
 
       const to = squareAt(px, py);
       if (to && to !== current.from) onMoveAttempt?.(current.from, to);
     },
-    [interactive, squareAt, onMoveAttempt, sq]
+    [interactive, squareAt, onMoveAttempt, onSquarePress, sq]
   );
 
   const pan = useMemo(

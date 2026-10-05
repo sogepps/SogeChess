@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Alert, ScrollView, useWindowDimensions, View } from 'react-native';
+import { ScrollView, useWindowDimensions, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -24,7 +24,7 @@ function todayKey() {
 export default function PuzzlesScreen() {
   const router = useRouter();
   const { theme, board, settings, t } = useSettings();
-  const { isPremium, limitFor } = usePremium();
+  const { isPremium } = usePremium();
   const { width, height } = useWindowDimensions();
 
   const [index, setIndex] = useState(0);
@@ -37,8 +37,6 @@ export default function PuzzlesScreen() {
   const [progress, setProgress] = useState({ solved: [], streak: 0, best: 0, day: todayKey(), count: 0 });
 
   const puzzle = PUZZLES[index];
-  const dailyLimit = limitFor('dailyPuzzles');
-  const limitReached = progress.day === todayKey() && progress.count >= dailyLimit;
 
   useEffect(() => {
     (async () => {
@@ -146,7 +144,7 @@ export default function PuzzlesScreen() {
 
   const onMoveAttempt = useCallback(
     (from, to) => {
-      if (feedback === 'solved' || limitReached) return;
+      if (feedback === 'solved') return;
       const legal = chess.moves({ verbose: true }).filter((m) => m.from === from && m.to === to);
       if (!legal.length) {
         setSelected(null);
@@ -158,12 +156,12 @@ export default function PuzzlesScreen() {
       }
       submitMove(from, to);
     },
-    [chess, feedback, limitReached, submitMove]
+    [chess, feedback, submitMove]
   );
 
   const onSquarePress = useCallback(
     (square) => {
-      if (feedback === 'solved' || limitReached) return;
+      if (feedback === 'solved') return;
       const piece = chess.get(square);
       if (selected && selected !== square) {
         onMoveAttempt(selected, square);
@@ -172,7 +170,7 @@ export default function PuzzlesScreen() {
       if (piece && piece.color === chess.turn()) setSelected((s) => (s === square ? null : square));
       else setSelected(null);
     },
-    [chess, selected, feedback, limitReached, onMoveAttempt]
+    [chess, selected, feedback, onMoveAttempt]
   );
 
   const reveal = useCallback(() => {
@@ -274,23 +272,6 @@ export default function PuzzlesScreen() {
           </Row>
         </Card>
 
-        {limitReached ? (
-          <Card style={{ marginBottom: SPACING.md, gap: SPACING.md }}>
-            <Row gap={SPACING.sm}>
-              <Ionicons name="lock-closed" size={18} color={theme.accent} />
-              <Txt size={13} weight="700" style={{ flex: 1 }}>
-                {t('puzzles.dailyLimit')}
-              </Txt>
-            </Row>
-            <Button
-              title={t('premium.subscribe')}
-              variant="accent"
-              full
-              onPress={() => router.push('/premium')}
-            />
-          </Card>
-        ) : null}
-
         <View
           style={{
             alignSelf: 'center',
@@ -318,7 +299,7 @@ export default function PuzzlesScreen() {
             coordinates={settings.coordinates}
             showLegalMoves={settings.showLegalMoves}
             animate={settings.animations}
-            interactive={feedback !== 'solved' && !limitReached}
+            interactive={feedback !== 'solved'}
             onSquarePress={onSquarePress}
             onMoveAttempt={onMoveAttempt}
           />
@@ -348,7 +329,6 @@ export default function PuzzlesScreen() {
           onPress={goNext}
           full
           size="lg"
-          disabled={limitReached}
         />
 
         <Row gap={SPACING.md} style={{ marginTop: SPACING.lg }}>
@@ -368,16 +348,6 @@ export default function PuzzlesScreen() {
               {t('puzzles.streak')}
             </Txt>
           </Card>
-          {!isPremium ? (
-            <Card style={{ flex: 1, alignItems: 'center', gap: 2 }}>
-              <Txt size={20} weight="800">
-                {Math.max(0, dailyLimit - progress.count)}
-              </Txt>
-              <Txt size={11} faint>
-                {t('puzzles.remainingToday')}
-              </Txt>
-            </Card>
-          ) : null}
         </Row>
 
         <AdBanner placement="puzzles" style={{ marginTop: SPACING.lg }} />

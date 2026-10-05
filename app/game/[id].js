@@ -10,7 +10,6 @@ import { Badge, Button, Card, IconButton, Row, Sheet, Txt } from '../../src/comp
 import AdBanner from '../../src/components/AdBanner';
 import { useSettings } from '../../src/store/SettingsContext';
 import { useLibrary } from '../../src/store/LibraryContext';
-import { usePremium } from '../../src/store/PremiumContext';
 import { evaluatePosition, formatEval } from '../../src/chess/engine';
 import { materialBalance, newGame } from '../../src/chess/core';
 import { gameTitle, resultLabelKey, serializeGameToPgn } from '../../src/chess/pgn';
@@ -25,7 +24,6 @@ export default function GameViewerScreen() {
   const router = useRouter();
   const { theme, board, settings, t } = useSettings();
   const { getGame, removeGame, toggleGameFavorite } = useLibrary();
-  const { isPremium } = usePremium();
   const { width, height } = useWindowDimensions();
 
   const [record, setRecord] = useState(null);
@@ -244,6 +242,18 @@ export default function GameViewerScreen() {
 
         <Row gap={SPACING.sm} style={{ paddingHorizontal: SPACING.lg }} wrap>
           <Button
+            title={t('studio.continue')}
+            icon="create-outline"
+            variant="accent"
+            size="sm"
+            onPress={() =>
+              router.push(
+                `/studio?id=${encodeURIComponent(String(id))}&mode=analyse&ply=${cursor}`
+              )
+            }
+            style={{ flex: 1 }}
+          />
+          <Button
             title={t('common.share')}
             icon="share-outline"
             variant="secondary"
@@ -261,14 +271,6 @@ export default function GameViewerScreen() {
             variant="secondary"
             size="sm"
             onPress={() => setShowPgn(true)}
-            style={{ flex: 1 }}
-          />
-          <Button
-            title={t('play.analyse')}
-            icon="analytics"
-            variant="secondary"
-            size="sm"
-            onPress={() => router.push(`/game/play?mode=analysis&fen=${encodeURIComponent(fen)}`)}
             style={{ flex: 1 }}
           />
         </Row>

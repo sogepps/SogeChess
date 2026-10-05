@@ -114,8 +114,9 @@ export default function PlayGameScreen() {
       setHintSquares(null);
       if (settings.haptics) tap(true, Haptics.ImpactFeedbackStyle.Light);
       if (clockOn && !clock.flagged) clock.pressSide(color);
-      // Ortaya koyup karşılıklı oyna: sıradaki oyuncunun taşları alta gelsin.
-      if (mode === 'friend' || (mode === 'record' && settings.autoFlip)) {
+      // Arkadaş modu gerçek tahta gibi sabittir. Otomatik çevirme yalnızca
+      // masa başı kayıt modunda, kullanıcı özellikle açtıysa uygulanır.
+      if (mode === 'record' && settings.autoFlip) {
         setFlipped(color === 'w');
       }
     },
@@ -253,12 +254,12 @@ export default function PlayGameScreen() {
     if (isOver || thinking) return;
     setThinking(true);
     try {
-      const move = await suggestMove(game.fen, isPremium ? 4 : 2);
+      const move = await suggestMove(game.fen, 4);
       if (move) setHintSquares({ from: move.from, to: move.to });
     } finally {
       setThinking(false);
     }
-  }, [isOver, thinking, game.fen, isPremium]);
+  }, [isOver, thinking, game.fen]);
 
   const doResign = useCallback(() => {
     Alert.alert(t('board.resign'), t('board.confirmResign'), [
@@ -293,7 +294,7 @@ export default function PlayGameScreen() {
     setShowGameOver(false);
     setSelected(null);
     // Geri alınca oynayacak taraf (son hamleyi yapan) alta gelsin.
-    if (mode === 'friend' || (mode === 'record' && settings.autoFlip)) {
+    if (mode === 'record' && settings.autoFlip) {
       setFlipped(lastColor === 'b');
     }
   }, [game, mode, settings.autoFlip]);
@@ -345,7 +346,11 @@ export default function PlayGameScreen() {
               : t('app.tagline')}
           </Txt>
         </View>
-        <IconButton name="swap-vertical" onPress={() => setFlipped((f) => !f)} />
+        {mode !== 'friend' ? (
+          <IconButton name="swap-vertical" onPress={() => setFlipped((f) => !f)} />
+        ) : (
+          <View style={{ width: 40 }} />
+        )}
         <IconButton name="list" onPress={() => setShowMoves(true)} />
       </Row>
 
@@ -573,9 +578,7 @@ function SaveGameSheet({
   onSaved,
 }) {
   const { t } = useSettings();
-  const { addGame, games } = useLibrary();
-  const { isAtLimit } = usePremium();
-  const router = useRouter();
+  const { addGame } = useLibrary();
 
   const [white, setWhite] = useState('');
   const [black, setBlack] = useState('');
@@ -598,17 +601,6 @@ function SaveGameSheet({
   }, [visible, mode, userSide, engineLevel, t]);
 
   const save = async () => {
-    if (isAtLimit('games', games.length)) {
-      Alert.alert(
-        t('common.premium'),
-        t('library.limitReached', { n: 25 }),
-        [
-          { text: t('common.cancel'), style: 'cancel' },
-          { text: t('premium.subscribe'), onPress: () => router.push('/premium') },
-        ]
-      );
-      return;
-    }
     setBusy(true);
     try {
       // Saat kullanıldıysa her hamlenin kalan süresi PGN'e [%clk] olarak yazılır.

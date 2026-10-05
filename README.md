@@ -168,8 +168,16 @@ Yayına çıkarken yalnızca `testBilling` nesnesini gerçek sağlayıcıyla
 (RevenueCat / `expo-in-app-purchases`) değiştirin ve `TEST_BILLING` bayrağını
 `false` yapın; uygulamanın geri kalanı `usePremium()` kullanmaya devam eder.
 
-Ücretsiz sürüm sınırları (`FREE_LIMITS`): 25 parti, 15 konum, 3 özel saat ayarı,
-günde 5 bulmaca.
+Premium yalnızca reklamları kaldırır; oyun, saat, bulmaca, tema ve kayıtlar
+herkese ücretsiz ve sınırsızdır.
+
+## Hamle Stüdyosu
+
+Analiz tahtası, konum düzenleyici ve masa başı kayıt tek ekranda birleşti:
+`/studio`. Üstteki mod çipleriyle geçiş yapılır; hamle listesi ortaktır.
+Kaydet → başlık + oyuncular; arşivden aç → hamleler arası gez / kaldığın
+ply’dan devam / güncelle veya yeni kayıt. İsteğe bağlı arşiv PIN’i Ayarlar →
+Veri’den konur.
 
 ## EAS build
 

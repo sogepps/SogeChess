@@ -180,7 +180,7 @@ export default function OpeningsScreen() {
               onPress={() => {
                 const fen = fenAfter(active.san, ply);
                 setActive(null);
-                router.push(`/game/play?mode=analysis&fen=${encodeURIComponent(fen)}`);
+                router.push(`/studio?mode=analyse&fen=${encodeURIComponent(fen)}`);
               }}
             />
           </View>

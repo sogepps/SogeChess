@@ -15,6 +15,7 @@ import {
   Row,
   SectionHeader,
   Sheet,
+  Field,
   ToggleRow,
   Txt,
 } from '../src/components/ui';
@@ -24,6 +25,7 @@ import { PIECE_SETS } from '../src/components/Piece';
 import { useSettings } from '../src/store/SettingsContext';
 import { usePremium } from '../src/store/PremiumContext';
 import { useLibrary } from '../src/store/LibraryContext';
+import { KEYS, readJson, writeJson, removeKey } from '../src/store/db';
 import { BOARD_THEMES, RADIUS, SPACING, UI_THEMES } from '../src/theme/themes';
 import { languageInfo } from '../src/i18n/languages';
 import { AGE_BANDS } from '../src/i18n/age';
@@ -55,6 +57,9 @@ export default function SettingsScreen() {
   const [footprint, setFootprint] = useState(null);
   const [langSheet, setLangSheet] = useState(false);
   const [ageSheet, setAgeSheet] = useState(false);
+  const [pinSheet, setPinSheet] = useState(false);
+  const [pinValue, setPinValue] = useState('');
+  const [hasPin, setHasPin] = useState(false);
 
   const loadFootprint = useCallback(async () => {
     setFootprint(await storageFootprint());
@@ -62,9 +67,21 @@ export default function SettingsScreen() {
 
   useEffect(() => {
     loadFootprint();
+    readJson(KEYS.libraryPin, null).then((p) => setHasPin(!!p));
   }, [loadFootprint]);
 
-  const requirePremium = () => router.push('/premium');
+  const savePin = async () => {
+    const next = String(pinValue).trim();
+    if (next && !/^\d{4,8}$/.test(next)) {
+      Alert.alert(t('library.pin'), t('library.pinHint'));
+      return;
+    }
+    if (next) await writeJson(KEYS.libraryPin, next);
+    else await removeKey(KEYS.libraryPin);
+    setHasPin(!!next);
+    setPinSheet(false);
+    setPinValue('');
+  };
 
   const doBackup = async () => {
     try {
@@ -173,12 +190,11 @@ export default function SettingsScreen() {
           </Row>
           <Row wrap gap={SPACING.sm}>
             {Object.values(BOARD_THEMES).map((bt) => {
-              const locked = bt.premium && !isPremium;
               const active = settings.boardTheme === bt.key;
               return (
                 <Pressable
                   key={bt.key}
-                  onPress={() => (locked ? requirePremium() : update({ boardTheme: bt.key }))}
+                  onPress={() => update({ boardTheme: bt.key })}
                   style={{ width: 62, alignItems: 'center', gap: 5 }}
                 >
                   <View
@@ -191,7 +207,6 @@ export default function SettingsScreen() {
                       borderColor: active ? theme.primary : theme.border,
                       flexDirection: 'row',
                       flexWrap: 'wrap',
-                      opacity: locked ? 0.55 : 1,
                     }}
                   >
                     {Array.from({ length: 16 }).map((_, i) => {
@@ -210,7 +225,6 @@ export default function SettingsScreen() {
                     })}
                   </View>
                   <Row gap={3}>
-                    {locked ? <Ionicons name="lock-closed" size={9} color={theme.accent} /> : null}
                     <Txt size={9} faint numberOfLines={1}>
                       {t(bt.nameKey)}
                     </Txt>
@@ -227,12 +241,11 @@ export default function SettingsScreen() {
           </Txt>
           <Row wrap gap={SPACING.md}>
             {Object.values(PIECE_SETS).map((ps) => {
-              const locked = ps.premium && !isPremium;
               const active = settings.pieceSet === ps.key;
               return (
                 <Pressable
                   key={ps.key}
-                  onPress={() => (locked ? requirePremium() : update({ pieceSet: ps.key }))}
+                  onPress={() => update({ pieceSet: ps.key })}
                   style={{
                     alignItems: 'center',
                     gap: 4,
@@ -241,7 +254,6 @@ export default function SettingsScreen() {
                     borderWidth: active ? 2 : 1,
                     borderColor: active ? theme.primary : theme.border,
                     backgroundColor: theme.surfaceAlt,
-                    opacity: locked ? 0.6 : 1,
                   }}
                 >
                   <Row gap={0}>
@@ -249,7 +261,6 @@ export default function SettingsScreen() {
                     <Piece type="n" color="b" size={30} set={ps.key} />
                   </Row>
                   <Row gap={3}>
-                    {locked ? <Ionicons name="lock-closed" size={9} color={theme.accent} /> : null}
                     <Txt size={10} faint>
                       {t(ps.nameKey)}
                     </Txt>
@@ -365,6 +376,16 @@ export default function SettingsScreen() {
         <SectionHeader title={t('settings.data')} icon="server" />
         <Card padded={false} style={{ paddingHorizontal: SPACING.lg, marginBottom: SPACING.lg }}>
           <ListRow
+            icon="lock-closed-outline"
+            title={t('library.pin')}
+            subtitle={hasPin ? t('library.pinSet') : t('library.pinHint')}
+            onPress={() => {
+              setPinValue('');
+              setPinSheet(true);
+            }}
+          />
+          <Divider />
+          <ListRow
             icon="cloud-upload-outline"
             title={t('settings.exportBackup')}
             subtitle={t('settings.exportBackupDesc')}
@@ -426,31 +447,33 @@ export default function SettingsScreen() {
         </View>
       </Sheet>
 
-      <Sheet visible={ageSheet} onClose={() => setAgeSheet(false)} title={t('settings.ageBand')}>
-        <Txt size={13} faint style={{ marginBottom: SPACING.md, lineHeight: 18 }}>
-          {t('age.pickSubtitle')}
-        </Txt>
-        <View style={{ gap: SPACING.sm }}>
-          {AGE_BANDS.map((band) => {
-            const active = settings.ageBand === band.id;
-            return (
-              <ListRow
-                key={band.id}
-                title={t(`age.band.${band.id}`)}
-                subtitle={t(`age.band.${band.id}.hint`)}
-                onPress={() => {
-                  setAgeBand(band.id);
-                  updateAdsAudience(band.id);
-                  setAgeSheet(false);
-                }}
-                right={
-                  active ? (
-                    <Ionicons name="checkmark-circle" size={20} color={theme.primary} />
-                  ) : undefined
-                }
-              />
-            );
-          })}
+      <Sheet visible={pinSheet} onClose={() => setPinSheet(false)} title={t('library.pin')}>
+        <View style={{ gap: SPACING.md }}>
+          <Txt size={13} faint>
+            {t('library.pinHint')}
+          </Txt>
+          <Field
+            label={t('library.pin')}
+            value={pinValue}
+            onChangeText={setPinValue}
+            keyboardType="number-pad"
+            secureTextEntry
+            maxLength={8}
+            placeholder="1234"
+          />
+          <Button title={t('common.save')} variant="accent" full onPress={savePin} />
+          {hasPin ? (
+            <Button
+              title={t('library.pinClear')}
+              variant="secondary"
+              full
+              onPress={async () => {
+                await removeKey(KEYS.libraryPin);
+                setHasPin(false);
+                setPinSheet(false);
+              }}
+            />
+          ) : null}
         </View>
       </Sheet>
     </SafeAreaView>
